@@ -6,7 +6,7 @@ export default {
   data () {
     return {
       search: '',
-      sortBy: [{ key: 'calories', order: 'asc' }],
+      sortBy: [{ key: 'rank', order: 'asc' }],
       headers: [
         { title: 'Rank', align: 'start', sortable: true, key: 'rank'},
         { title: 'ASN', sortable: true, key: 'asn' },
@@ -14,18 +14,7 @@ export default {
         { title: 'Organization', key: 'organization' },
         { title: 'ROV-Ratio', key: 'ratio' },
       ],
-      data: overview,
-      groupBy: [
-        {
-          key: 'asn',
-          order: 'asc',
-        }
-      ]
-    }
-  },
-  methods: {
-    handleClick(event, row) {
-      alert(row.item.columns.asn);
+      data: overview
     }
   }
 }
@@ -86,13 +75,13 @@ export default {
       >
         <template v-slot:item="{ item }">
           <tr>
-            <td>{{ item.columns.rank }}</td>
-            <td>
+            <td style="width:10%">{{ item.columns.rank }}</td>
+            <td style="width:10%">
                 <graph-dialog :asn_id="item.columns.asn"/>
             </td>
-            <td>{{ item.columns.country }}</td>
-            <td>{{ item.columns.organization }}</td>
-            <td>{{ item.columns.ratio }}</td>
+            <td style="width:25%">{{ item.columns.country }}</td>
+            <td style="width:45%">{{ item.columns.organization }}</td>
+            <td style="width:10%">{{ item.columns.ratio }}</td>
           </tr>
         </template>
       </v-data-table>

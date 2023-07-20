@@ -1,5 +1,7 @@
 <script>
+import HighChartsWrapper from "@/components/high-charts-wrapper.vue";
 export default {
+  components: {HighChartsWrapper},
   props: {
     asn_id: String
   },
@@ -17,7 +19,7 @@ export default {
 }
 </style>
 <template>
-  <v-row justify="center">
+  <v-row>
     <v-dialog
         v-model="dialog"
         fullscreen
@@ -25,11 +27,14 @@ export default {
         transition="dialog-bottom-transition"
     >
       <template v-slot:activator="{ props }">
-        <v-btn
-            v-bind="props"
-        >
-          {{asn_id}}
-        </v-btn>
+        <div>
+          <v-btn
+              elevation="1"
+              v-bind="props"
+          >
+            {{asn_id}}
+          </v-btn>
+        </div>
       </template>
       <v-card>
         <v-toolbar
@@ -42,7 +47,7 @@ export default {
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>AS-Specific ROV Filtering Ratio {{asn_id}}</v-toolbar-title>
+          <v-toolbar-title>AS-Specific ROV Filtering Ratio</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
 
@@ -52,6 +57,10 @@ export default {
           <br>
           <p>To see what ASNs and their RPKI-invalid prefixes we have tested, click each data point!</p>
         </div>
+
+
+        <high-charts-wrapper :asn_id="asn_id"/>
+
       </v-card>
     </v-dialog>
   </v-row>

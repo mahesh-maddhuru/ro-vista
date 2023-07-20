@@ -12,6 +12,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import * as labsComponents from 'vuetify/labs/components'
+import HighchartsVue from 'highcharts-vue'
 
 const vuetify = createVuetify({
     directives,
@@ -29,4 +30,5 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)
+app.use(HighchartsVue)
 app.mount('#app')
