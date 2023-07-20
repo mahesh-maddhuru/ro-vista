@@ -9,7 +9,7 @@ import AppHeader from "@/layouts/AppHeader.vue";
     <app-header/>
     <side-bar/>
 
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+    <v-main class="ma-10" style="min-height: 300px;">
       <RouterView />
     </v-main>
   </v-app>
