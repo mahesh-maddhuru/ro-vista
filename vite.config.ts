@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  base: '/ro-vista',
+  base: '/ro-vista/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
