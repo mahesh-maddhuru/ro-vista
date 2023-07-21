@@ -12,7 +12,7 @@ export default {
   data () {
     return {
       dialog2: false,
-
+      lastClickedPoint:{},
       //chart
       chartOptions: {
         title:{
@@ -22,7 +22,21 @@ export default {
           {
             data: [1, 2, 3]
           }
-        ]
+        ],
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            point: {
+              events: {
+                click:  ({point}) => {
+                  this.dialog2 = true;
+                  console.log(point); //TODO: pick data from this
+                  this.lastClickedPoint = point.category;
+                }
+              }
+            }
+          }
+        },
       },
 
       // table
@@ -51,13 +65,8 @@ export default {
   <div class="ma-5 pa-5">
     <highcharts class="hc" :options="chartOptions" ></highcharts>
 
-
-    <v-btn>
-      Open Dialog
-
       <v-dialog
           v-model="dialog2"
-          activator="parent"
           width="auto"
       >
         <v-card>
@@ -79,7 +88,7 @@ export default {
                 class="mx-auto mt-10 pa-5"
                 elevation="2"
             >
-<!--              <div class="text-h4 text&#45;&#45;primary pa-2">Details of RoVISTA’s Inference Results</div>-->
+              <div class="text-h5 text--primary pa-2">{{lastClickedPoint}}</div>
 
               <p class="pa-5">The table shows the list of (Destination) ASNs and the RPKI-invalid IP prefixes that they announced on the specific date.
                 It also shows, based on our technique, whether the (source) ASN filtered such RPKI-invalid prefixes or not.</p>
@@ -113,6 +122,5 @@ export default {
           </v-card-text>
         </v-card>
       </v-dialog>
-    </v-btn>
   </div>
 </template>
