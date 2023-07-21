@@ -1,4 +1,9 @@
 {
+  "compilerOptions":{
+    "allowJs": true,
+    "target": "es6",
+    "outDir": "./dist"
+  },
   "files": [],
   "references": [
     {
