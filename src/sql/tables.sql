@@ -1,33 +1,46 @@
-create table if not exists test(
-   id INTEGER primary key,
-   name VARCHAR(256)
+create table if not exists AS_SPECIFIC_ROA_RATIO
+(
+    ASN         int   not null,
+    RECORD_DATE date  null,
+    TOTAL       int   null,
+    FILTER      int   null,
+    REMOVE      int   null,
+    RATIO       float null,
+    ID          int auto_increment
+        primary key
 );
 
-CREATE TABLE IF NOT EXISTS OVERVIEW_ROA_RATIO(
-  ASN INTEGER PRIMARY KEY,
-  TOTAL INTEGER,
-  FILTER INTEGER,
-  REMOVE INTEGER,
-  AS_RANK INTEGER,
-  ORGANIZATION VARCHAR(256),
-  COUNTRY  VARCHAR(256),
-  COUNTRY_ISO VARCHAR(256),
-  RATIO FLOAT
+create index INDEX_ASN
+    on AS_SPECIFIC_ROA_RATIO (ASN);
+
+create table if not exists INFERENCE_RESULTS
+(
+    ASN         int          not null
+        primary key,
+    TARGET_ASN  int          null,
+    FILTER      float        null,
+    RECORD_DATE date         null,
+    PREFIX      varchar(256) null
 );
 
-CREATE TABLE IF NOT EXISTS AS_SPECIFIC_ROA_RATIO(
-    ASN INTEGER PRIMARY KEY,
-    RECORD_DATE DATE,
-    TOTAL INTEGER,
-    FILTER INTEGER,
-    REMOVE INTEGER,
-    RATIO FLOAT
+create table if not exists OVERVIEW_ROA_RATIO
+(
+    ASN          int          not null
+        primary key,
+    TOTAL        int          null,
+    FILTER       int          null,
+    REMOVE       int          null,
+    AS_RANK      int          null,
+    ORGANIZATION varchar(256) null,
+    COUNTRY      varchar(256) null,
+    COUNTRY_ISO  varchar(256) null,
+    RATIO        float        null
 );
 
-CREATE TABLE IF NOT EXISTS INFERENCE_RESULTS(
-    ASN INTEGER PRIMARY KEY,
-    TARGET_ASN INTEGER,
-    FILTER FLOAT,
-    RECORD_DATE DATE,
-    PREFIX VARCHAR(256)
+create table if not exists test
+(
+    id   int          not null
+        primary key,
+    name varchar(256) null
 );
+

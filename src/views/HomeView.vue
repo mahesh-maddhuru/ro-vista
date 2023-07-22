@@ -1,10 +1,12 @@
 <script>
-import overview from '@/data/overview.json'
 import GraphDialog from "@/components/GraphDialog.vue";
+import RoaApi from "@/api/RoaApi";
+
 export default {
   components: {GraphDialog},
   data () {
     return {
+      dataLoaded: false,
       search: '',
       sortBy: [{ key: 'rank', order: 'asc' }],
       headers: [
@@ -14,8 +16,19 @@ export default {
         { title: 'Organization', key: 'organization' },
         { title: 'ROV-Ratio', key: 'ratio' },
       ],
-      data: overview
+      data: []
     }
+  },
+  methods: {
+    fetchOverviewData() {
+      RoaApi.getOverview().then(response => {
+        this.data = response.data;
+        this.dataLoaded = true;
+      });
+    }
+  },
+  created() {
+    this.fetchOverviewData();
   }
 }
 </script>
@@ -58,7 +71,18 @@ export default {
     >
       <div class="text-h4 text--primary pa-2">Overview of ROV Filtering Ratio</div>
 
+      <div class="d-flex justify-center">
+        <v-progress-circular
+            :size="50"
+            v-if="!dataLoaded"
+            :width="5"
+            color="blue-darken-4"
+            indeterminate
+        ></v-progress-circular>
+      </div>
+
         <v-text-field
+            v-if="dataLoaded"
             class="mt-5"
             v-model="search"
             label="Search"
@@ -72,6 +96,7 @@ export default {
           :items="data"
           class="elevation-1"
           :search="search"
+          v-if="dataLoaded"
       >
         <template v-slot:item="{ item }">
           <tr>

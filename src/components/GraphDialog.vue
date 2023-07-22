@@ -3,7 +3,7 @@ import HighChartsWrapper from "@/components/high-charts-wrapper.vue";
 export default {
   components: {HighChartsWrapper},
   props: {
-    asn_id: String
+    asn_id: Number
   },
   data () {
     return {

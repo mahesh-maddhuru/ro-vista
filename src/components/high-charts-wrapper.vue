@@ -2,42 +2,24 @@
 import Highcharts from 'highcharts'
 import exportingInit from 'highcharts/modules/exporting'
 import tnodes from "@/data/tnodes.json";
+import RoaApi from "@/api/RoaApi";
 
 exportingInit(Highcharts)
 
 export default {
   props: {
-    asn_id: String
+    asn_id: Number
   },
   data () {
     return {
+      asSpecificRatioData : [],
+      test: {},
+      showGraph : false,
       dialog2: false,
       lastClickedPoint:{},
+
       //chart
-      chartOptions: {
-        title:{
-          text: "ROV Filtering Ratio"
-        },
-        series: [
-          {
-            data: [1, 2, 3]
-          }
-        ],
-        plotOptions: {
-          series: {
-            cursor: 'pointer',
-            point: {
-              events: {
-                click:  ({point}) => {
-                  this.dialog2 = true;
-                  console.log(point); //TODO: pick data from this
-                  this.lastClickedPoint = point.category;
-                }
-              }
-            }
-          }
-        },
-      },
+      chartOptions: {},
 
       // table
       search: '',
@@ -52,6 +34,131 @@ export default {
       data: tnodes
     }
   },
+  methods : {
+    fetchAsSpecificRatio() {
+      RoaApi.getAsSpecificRatio(this.asn_id).then(response => {
+        this.asSpecificRatioData = response.data;
+        this.populateChartOptions(this.asSpecificRatioData);
+        this.showGraph = true;
+      })
+    },
+    populateChartOptions(data){
+      let processedInterim = this.prepareData(data);
+
+      let options = {
+        title:{
+          text: "ROV Filtering Ratio"
+        },
+        series: [],
+        xAxis: {
+          tickInterval: 20,
+          title: {
+            text: ""
+          },
+          categories: []
+        },
+
+        yAxis: [
+          {
+            title: {
+              text: '# of Targets'
+            }
+          },
+          {
+            gridLineWidth: 0,
+            opposite: true,
+            max: 1,
+            min: 0,
+            title: {
+                text: "ROV Ratio (%)"
+            },
+            labels: {
+                align: 'left',
+                x: 8,
+                y: 3,
+                format: '{value:.,0f}'
+            },
+          }
+        ],
+
+        legend: {
+          align: 'left',
+          verticalAlign: 'top',
+          borderWidth: 0
+        },
+
+        tooltip: {
+          shared: true,
+          crosshairs: true
+        },
+        plotOptions: {
+          series: {
+            allowPointSelect: true,
+            marker: {
+              lineWidth: 1
+            },
+            cursor: 'pointer',
+            point: {
+              events: {
+                click:  ({point}) => {
+                  this.dialog2 = true;
+                  this.lastClickedPoint = point.category;
+                  console.log(this.lastClickedPoint); //TODO: pick data from this
+                }
+              }
+            }
+          }
+        },
+        error: function (e, t) {
+          console.log(e, t);
+        }
+      };
+
+      let labels = ['total', 'filter','remove','ratio'];
+      labels.forEach(label => {
+        var series = {
+          name: label,
+          data: processedInterim[label],
+        };
+
+        if(label === 'ratio'){
+          series.yAxis = 1;
+          series.type = 'line';
+          series.marker = {
+            radius: 4
+          }
+        }
+        options.series.push(series);
+      })
+      options.xAxis.categories = processedInterim.categories;
+
+      // console.log(options);
+
+      this.chartOptions = options;
+    },
+    prepareData(data) {
+      let processedInterim = {
+        categories:[],
+        total: [],
+        filter:[],
+        remove:[],
+        ratio:[]
+      };
+
+      data.forEach(item => {
+        processedInterim.categories.push(new Date(item["recordDate"]).toDateString());
+        processedInterim.total.push(item["total"]);
+        processedInterim.filter.push(item["filter"]);
+        processedInterim.remove.push(item["remove"]);
+        processedInterim.ratio.push(item["ratio"]);
+      })
+      // console.log(processedInterim);
+      return processedInterim;
+    }
+  },
+  created() {
+    this.fetchAsSpecificRatio();
+  }
 }
 
 </script>
@@ -63,7 +170,16 @@ export default {
     <p class="text-h5 text--primary pa-2">AS {{asn_id}}</p>
   </div>
   <div class="ma-5 pa-5">
-    <highcharts class="hc" :options="chartOptions" ></highcharts>
+    <div class="d-flex justify-center">
+      <v-progress-circular
+          v-if="!showGraph"
+          :size="70"
+          :width="7"
+          color="blue-darken-4"
+          indeterminate
+      ></v-progress-circular>
+    </div>
+    <highcharts class="hc" v-if="showGraph" :options="chartOptions" ></highcharts>
 
       <v-dialog
           v-model="dialog2"
@@ -88,7 +204,7 @@ export default {
                 class="mx-auto mt-10 pa-5"
                 elevation="2"
             >
-              <div class="text-h5 text--primary pa-2">{{lastClickedPoint}}</div>
+              <div class="text-h5 text--primary pa-2 bg-red">{{lastClickedPoint}} --- TODO: VALUES ARE HARDCODED! ---</div>
 
               <p class="pa-5">The table shows the list of (Destination) ASNs and the RPKI-invalid IP prefixes that they announced on the specific date.
                 It also shows, based on our technique, whether the (source) ASN filtered such RPKI-invalid prefixes or not.</p>
