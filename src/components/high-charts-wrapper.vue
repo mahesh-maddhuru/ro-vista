@@ -204,7 +204,7 @@ export default {
                 class="mx-auto mt-10 pa-5"
                 elevation="2"
             >
-              <div class="text-h5 text--primary pa-2 bg-red">{{lastClickedPoint}} --- TODO: VALUES ARE HARDCODED! ---</div>
+              <div class="text-h5 text--primary pa-2 bg-red">You clicked on: "{{lastClickedPoint}}" --- TODO: DATA ISSUE (Values are currently hardcoded!) ---</div>
 
               <p class="pa-5">The table shows the list of (Destination) ASNs and the RPKI-invalid IP prefixes that they announced on the specific date.
                 It also shows, based on our technique, whether the (source) ASN filtered such RPKI-invalid prefixes or not.</p>
