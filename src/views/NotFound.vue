@@ -29,8 +29,4 @@ export default {
 }
 </script>
 <style>
-.not-found{
-  //margin: 2px auto;
-  //text-align: center;
-}
 </style>
