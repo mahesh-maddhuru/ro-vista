@@ -1,7 +1,6 @@
 import axios from "axios";
-
-const staticIp = "ec2-3-15-251-42.us-east-2.compute.amazonaws.com";
-const base_url = `http://${staticIp}/rovista/api`;
+import config from "../config.js"
+const base_url = `http://${config.hostname}/rovista/api`;
 
 class RoaApi {
     getOverview() {
