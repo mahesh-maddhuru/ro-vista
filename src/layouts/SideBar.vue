@@ -31,6 +31,11 @@ export default {
         title: "Contact",
         icon: "mdi-phone",
         to: "/contact"
+      },
+      {
+        title: "Api Docs",
+        icon: "mdi-api",
+        to: "/api-docs"
       }
     ]
   }),
